@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Запуск JavaScript</title>
+</head>
+<body>
+    <script>
+        // Замените функцию connectToServer() в предыдущем HTML
+async function fetchThreadData() {
+    try {
+        const response = await fetch('http://185.87.194.41:5000/api/threads');
+        const data = await response.json();
+        
+        state.threads = data.thread_count;
+        state.cpuLoad = data.cpu_load;
+        state.memoryUsed = data.memory_used;
+        state.memoryTotal = data.memory_total;
+        state.networkIO = data.network_sent + data.network_recv;
+        
+        updateUI();
+        updateChart();
+        logEvent('Данные получены');
+        
+    } catch (error) {
+        state.status = 'error';
+        logEvent('Ошибка подключения');
+        console.error('Ошибка:', error);
+    }
+}
+
+// Обновляйте данные каждые 3 секунды
+setInterval(fetchThreadData, 3000);
+    </script>
+</body>
+</html>
